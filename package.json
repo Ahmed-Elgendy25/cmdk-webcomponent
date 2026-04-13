@@ -33,10 +33,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Ahmed-Elgendy25/cmdk-wc.git"
+    "url": "https://github.com/Ahmed-Elgendy25/cmdk-webcomponent.git"
   },
-  "homepage": "https://github.com/Ahmed-Elgendy25/cmdk-wc#readme",
+  "homepage": "https://github.com/Ahmed-Elgendy25/cmdk-webcomponent#readme",
   "bugs": {
-    "url": "https://github.com/Ahmed-Elgendy25/cmdk-wc/issues"
+    "url": "https://github.com/Ahmed-Elgendy25/cmdk-webcomponent/issues"
   }
 }
