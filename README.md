@@ -765,9 +765,8 @@ Detailed integration guides for each framework:
 ---
 
 ## Contributing
-
-Contributions are welcome! Please read our contributing guidelines before submitting PRs.
-
+This repository is currently not open for contributions.
+Please open an issue to discuss before submitting any pull requests.
 ---
 
 ## License
