@@ -13,9 +13,7 @@
       "require": "./dist/cmdk-wc.umd.js"
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -30,12 +28,15 @@
     "vite": "^8.0.4",
     "vite-plugin-dts": "^4.5.4"
   },
-  "keywords": [
-    "web-component",
-    "lit",
-    "cmdk",
-    "ui"
-  ],
+  "keywords": ["web-component", "lit", "cmdk", "command-palette", "ui"],
   "author": "Ahmed Ashraf",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ahmed-Elgendy25/cmdk-wc.git"
+  },
+  "homepage": "https://github.com/Ahmed-Elgendy25/cmdk-wc#readme",
+  "bugs": {
+    "url": "https://github.com/Ahmed-Elgendy25/cmdk-wc/issues"
+  }
 }
