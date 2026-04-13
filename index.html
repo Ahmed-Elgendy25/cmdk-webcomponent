@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cmdk-webcomponent</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+          'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+          'Helvetica Neue', sans-serif;
+        background: #ffffff;
+        color: #0f172a;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html,
+        body {
+          background: #0f172a;
+          color: #f1f5f9;
+        }
+      }
+
+      body {
+        padding: 24px;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 32px;
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+
+      p {
+        font-size: 14px;
+        color: #64748b;
+        margin-bottom: 24px;
+        line-height: 1.6;
+      }
+
+      .demo-section {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 24px;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .demo-section {
+          background: #1e293b;
+          border-color: #334155;
+        }
+      }
+
+      .demo-section h2 {
+        font-size: 18px;
+        margin-bottom: 12px;
+        font-weight: 600;
+      }
+
+      .demo-section p {
+        margin-bottom: 12px;
+      }
+
+      .keyboard-hint {
+        font-size: 12px;
+        color: #64748b;
+        font-family: 'Monaco', 'Courier New', monospace;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        padding: 8px 12px;
+        display: inline-block;
+        margin-top: 12px;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .keyboard-hint {
+          background: #0f172a;
+          border-color: #334155;
+        }
+      }
+
+      #events-log {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        padding: 12px;
+        font-size: 12px;
+        font-family: 'Monaco', 'Courier New', monospace;
+        max-height: 200px;
+        overflow: auto;
+        margin-top: 12px;
+        color: #0f172a;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        #events-log {
+          background: #0f172a;
+          border-color: #334155;
+          color: #f1f5f9;
+        }
+      }
+
+      .event-line {
+        padding: 4px 0;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .event-line {
+          border-bottom-color: #334155;
+        }
+      }
+
+      .event-line:last-child {
+        border-bottom: none;
+      }
+
+      .event-time {
+        color: #94a3b8;
+        margin-right: 8px;
+      }
+
+      .event-type {
+        color: #3b82f6;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>cmdk Web Component</h1>
+      <p>
+        A Lit-based command palette component with pages, search filtering, and keyboard
+        navigation. Press <kbd>Ctrl+K</kbd> (or <kbd>Cmd+K</kbd> on Mac) to open.
+      </p>
+
+      <div class="demo-section">
+        <h2>Demo</h2>
+        <p>
+          Click the button below or press the keyboard shortcut to open the command palette.
+        </p>
+        <button id="open-btn" type="button">Open Command Palette</button>
+        <div class="keyboard-hint">Ctrl+K (or Cmd+K)</div>
+      </div>
+
+      <div class="demo-section">
+        <h2>Event Log</h2>
+        <p>Events dispatched by the palette will appear below:</p>
+        <div id="events-log"></div>
+      </div>
+    </div>
+
+    <cmdk-palette id="palette"></cmdk-palette>
+
+    <script type="module">
+      const palette = document.getElementById('palette');
+      const openBtn = document.getElementById('open-btn');
+      const eventLog = document.getElementById('events-log');
+
+      // Sample pages data according to the specification
+      const pages = [
+        {
+          id: 'root',
+          lists: [
+            {
+              id: 'home',
+              heading: 'Home',
+              items: [
+                {
+                  id: 'home',
+                  label: 'Home',
+                  icon: '🏠',
+                  href: '#',
+                },
+                {
+                  id: 'settings',
+                  label: 'Settings',
+                  icon: '⚙️',
+                  href: '#',
+                },
+                {
+                  id: 'projects',
+                  label: 'Projects',
+                  icon: '📁',
+                  page: 'projects',
+                  closeOnSelect: false,
+                },
+              ],
+            },
+            {
+              id: 'other',
+              heading: 'Other',
+              items: [
+                {
+                  id: 'dev',
+                  label: 'Developer settings',
+                  icon: '👨‍💻',
+                  href: '#',
+                },
+                {
+                  id: 'privacy',
+                  label: 'Privacy policy',
+                  icon: '🛡️',
+                  href: '#',
+                },
+                {
+                  id: 'logout',
+                  label: 'Log out',
+                  icon: '🚪',
+                  onClick: () => {
+                    alert('Logging out…');
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'projects',
+          lists: [
+            {
+              id: 'projects-list',
+              heading: 'Projects',
+              items: [
+                {
+                  id: 'hobby',
+                  label: 'Hobby project',
+                  icon: '🎮',
+                  onClick: () => {
+                    alert('Opening hobby project…');
+                  },
+                },
+                {
+                  id: 'work',
+                  label: 'Work project',
+                  icon: '💼',
+                  onClick: () => {
+                    alert('Opening work project…');
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      // Set up the palette
+      palette.pages = pages;
+
+      // Button to toggle palette (focus is handled automatically by component)
+      openBtn.addEventListener('click', () => {
+        palette.open = !palette.open;
+      });
+
+      // Event logging
+      function logEvent(type, detail) {
+        const now = new Date().toLocaleTimeString('en-US', {
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        });
+        const line = document.createElement('div');
+        line.className = 'event-line';
+        line.innerHTML = `<span class="event-time">${now}</span><span class="event-type">${type}</span> ${JSON.stringify(
+          detail
+        )}`;
+        eventLog.insertBefore(line, eventLog.firstChild);
+
+        // Keep only last 10 events
+        while (eventLog.children.length > 10) {
+          eventLog.removeChild(eventLog.lastChild);
+        }
+      }
+
+      palette.addEventListener('cmdk-select', (e) => {
+        logEvent('cmdk-select', e.detail);
+      });
+
+      palette.addEventListener('cmdk-page', (e) => {
+        logEvent('cmdk-page', e.detail);
+      });
+
+      palette.addEventListener('cmdk-search', (e) => {
+        logEvent('cmdk-search', e.detail);
+      });
+
+      console.log('✨ cmdk palette loaded!');
+      console.log('📖 Try:');
+      console.log('  - Press Ctrl+K to open the palette');
+      console.log('  - Type to search');
+      console.log('  - Arrow keys to navigate');
+      console.log('  - Enter to select');
+      console.log('  - Escape to close or go back');
+    </script>
+  </body>
+</html>
+
+    <script type="module">
+      import('./src/index.ts');
+
+      const palette = document.getElementById('palette');
+
+      // Log item selection
+      palette.addEventListener('cmdk-select', (e) => {
+        console.log('✓ Selected:', e.detail);
+      });
+
+      // Log navigation (drill-down)
+      palette.addEventListener('cmdk-navigate', (e) => {
+        console.log(
+          `→ Navigated to "${e.detail.label}" (depth: ${e.detail.depth})`,
+        );
+      });
+
+      // Log navigation back
+      palette.addEventListener('cmdk-navigate-back', (e) => {
+        console.log('← Navigated back');
+      });
+
+      // Log search queries
+      palette.addEventListener('cmdk-input', (e) => {
+        console.log('🔍 Searching:', e.detail.query);
+      });
+    </script>
+  </body>
+</html>
