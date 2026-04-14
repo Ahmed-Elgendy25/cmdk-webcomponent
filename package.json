@@ -52,7 +52,9 @@
     "lit",
     "cmdk",
     "command-palette",
-    "ui"
+    "ui",
+    "cmdk webcomponent",
+    "cmdk-webcomponent",
   ],
   "author": "Ahmed Ashraf",
   "license": "MIT",
