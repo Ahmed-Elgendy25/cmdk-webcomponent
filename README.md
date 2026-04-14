@@ -1,11 +1,33 @@
 # cmdk-wc
 
-**A framework-agnostic command palette web component.** Built as native Web Components with full TypeScript support, works in React, Vue, Svelte, Angular, and vanilla JavaScript. Inspired by [cmdk](https://github.com/pacocoursey/cmdk), framework-agnostic.
+**A framework-agnostic command palette web component.** Built as native Web Components with full TypeScript support, works in React, Vue, Svelte, Angular, and vanilla JavaScript. Inspired by [cmdk](https://github.com/pacocoursey/cmdk), reimagined for any framework.
 
 [![npm version](https://img.shields.io/npm/v/cmdk-wc?style=flat-square)](https://www.npmjs.com/package/cmdk-wc)
 [![npm downloads](https://img.shields.io/npm/dm/cmdk-wc?style=flat-square)](https://www.npmjs.com/package/cmdk-wc)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Built with Lit](https://img.shields.io/badge/built%20with-Lit-purple?style=flat-square)](https://lit.dev)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents-published-blue?style=flat-square)](https://webcomponents.org/element/cmdk-wc)
+
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [About cmdk-wc](#about-cmdk-wc)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Component API](#component-api)
+- [Data Structure](#data-structure)
+- [Theming](#theming)
+- [Keyboard Shortcuts](#keyboard-shortcuts)
+- [TypeScript Support](#typescript-support)
+- [Browser Support](#browser-support)
+- [Advanced Usage](#advanced-usage)
+- [Framework Guides](#framework-guides)
+- [Building from Source](#building-from-source)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support & Issues](#support--issues)
 
 ---
 
@@ -19,6 +41,20 @@
 - 🧩 **Accessible** — ARIA roles, screen reader support, semantic HTML, keyboard shortcuts footer with aria-labels
 - ✨ **TypeScript** — Full type definitions included for all components and interfaces
 - 🚀 **Framework Agnostic** — Drop into React, Vue, Svelte, Angular, or any framework
+
+---
+
+## About cmdk-wc
+
+**cmdk-wc** is a framework-agnostic command palette web component that works with any JavaScript framework or vanilla JavaScript. 
+
+- **Published on NPM**: [npmjs.com/package/cmdk-wc](https://www.npmjs.com/package/cmdk-wc)
+- **License**: [MIT (Open Source Initiative)](https://opensource.org/licenses/MIT)
+- **Repository**: [GitHub - AhmedAshraf-GPT/cmdk](https://github.com/AhmedAshraf-GPT/cmdk)
+- **Built with**: [Lit 3.x](https://lit.dev) - Web Components framework
+- **Type Support**: Full TypeScript type definitions included
+
+This component follows **Web Components Standards** (Custom Elements, Shadow DOM, Slot API) and is compatible with all modern browsers.
 
 ---
 
@@ -765,15 +801,107 @@ Detailed integration guides for each framework:
 ---
 
 ## Contributing
-This repository is currently not open for contributions.
-Please open an issue to discuss before submitting any pull requests.
+
+This repository is currently not open for contributions.  
+Please [open an issue](https://github.com/AhmedAshraf-GPT/cmdk/issues) to discuss before submitting any pull requests.
+
 ---
 
 ## License
 
-MIT © 2024 Ahmed Ashraf
+**MIT License** ([Open Source Initiative Approved](https://opensource.org/licenses/MIT))
 
-See [LICENSE](LICENSE) for details.
+This software is released under the MIT License, which permits commercial use, modification, and distribution.
+
+**You are free to:**
+- ✅ Use this software for any purpose (personal, educational, commercial)
+- ✅ Modify and distribute modified versions
+- ✅ Include this software in proprietary applications
+
+**Conditions:**
+- Include a copy of the License and Copyright notice with distributions
+
+See the full [LICENSE](LICENSE) file for details.
+
+---
+
+## Support & Issues
+
+- **Bug Reports**: [GitHub Issues](https://github.com/AhmedAshraf-GPT/cmdk/issues)
+- **Feature Requests**: [GitHub Discussions](https://github.com/AhmedAshraf-GPT/cmdk/discussions)
+- **Documentation**: See [docs/](docs/) for framework-specific guides
+
+---
+
+## Building from Source
+
+### Prerequisites
+
+- Node.js 18+
+- pnpm (or npm/yarn/bun)
+
+### Setup
+
+```bash
+git clone https://github.com/AhmedAshraf-GPT/cmdk.git
+cd cmdk
+pnpm install
+```
+
+### Development
+
+```bash
+# Start Vite dev server with hot reload
+pnpm dev
+
+# Build library
+pnpm build
+
+# Run tests (if applicable)
+pnpm test
+
+# Lint code
+pnpm lint
+```
+
+### Project Structure
+
+```
+src/
+├── components/          # Web component definitions
+│   ├── cmdkpalette.ts   # Main palette orchestrator
+│   ├── cmdkinput.ts     # Search input
+│   ├── cmdklist.ts      # Item list container
+│   ├── cmdkgroup.ts     # Item group
+│   ├── cmdkitem.ts      # Individual item
+│   └── ...
+├── index.ts            # Entry point
+└── types.ts            # TypeScript definitions
+
+types/
+├── index.d.ts          # Main type definitions
+├── react.d.ts          # React integration types
+├── vue.d.ts            # Vue integration types
+└── ...                 # Other framework types
+
+docs/
+├── react.md            # React integration guide
+├── vue.md              # Vue 3 integration guide
+├── svelte.md           # Svelte integration guide
+├── angular.md          # Angular integration guide
+├── vanilla.md          # Vanilla JS guide
+└── theming.md          # CSS customization guide
+```
+
+---
+
+## Maintenance & Updates
+
+This project is actively maintained. For version history and changelog, see [GitHub Releases](https://github.com/AhmedAshraf-GPT/cmdk/releases).
+
+### Current Version
+
+**v1.1.0** - Latest release with full keyboard navigation, accessibility features, and framework integrations.
 
 ---
 
