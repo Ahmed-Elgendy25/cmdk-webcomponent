@@ -46,7 +46,7 @@
 
 ## About cmdk-wc
 
-**cmdk-wc** is a framework-agnostic command palette web component that works with any JavaScript framework or vanilla JavaScript. 
+**cmdk-wc** is a framework-agnostic command palette web component that works with any JavaScript framework or vanilla JavaScript.
 
 - **Published on NPM**: [npmjs.com/package/cmdk-wc](https://www.npmjs.com/package/cmdk-wc)
 - **License**: [MIT (Open Source Initiative)](https://opensource.org/licenses/MIT)
@@ -814,11 +814,13 @@ Please [open an issue](https://github.com/AhmedAshraf-GPT/cmdk/issues) to discus
 This software is released under the MIT License, which permits commercial use, modification, and distribution.
 
 **You are free to:**
+
 - ✅ Use this software for any purpose (personal, educational, commercial)
 - ✅ Modify and distribute modified versions
 - ✅ Include this software in proprietary applications
 
 **Conditions:**
+
 - Include a copy of the License and Copyright notice with distributions
 
 See the full [LICENSE](LICENSE) file for details.
