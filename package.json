@@ -1,6 +1,6 @@
 {
   "name": "cmdk-wc",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Command menu web component built with Lit",
   "type": "module",
   "main": "./dist/cmdk-wc.umd.js",
@@ -13,7 +13,9 @@
       "require": "./dist/cmdk-wc.umd.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -28,7 +30,13 @@
     "vite": "^8.0.4",
     "vite-plugin-dts": "^4.5.4"
   },
-  "keywords": ["web-component", "lit", "cmdk", "command-palette", "ui"],
+  "keywords": [
+    "web-component",
+    "lit",
+    "cmdk",
+    "command-palette",
+    "ui"
+  ],
   "author": "Ahmed Ashraf",
   "license": "MIT",
   "repository": {
