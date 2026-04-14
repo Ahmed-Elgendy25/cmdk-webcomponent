@@ -13,20 +13,22 @@ cmdk-palette                    (root, state owner, keyboard controller)
 │
 ├── cmdk-input                  (search input + breadcrumb display)
 │
-└── cmdk-list                   (scroll container, role="listbox")
-    │
-    └── cmdk-group              (category heading + items container)
-        │
-        └── cmdk-item           (single selectable row)
-        └── cmdk-item
-        └── cmdk-item
-    │
-    └── cmdk-group              (another category)
-        │
-        └── cmdk-item
-        └── cmdk-item
-    │
-    └── cmdk-free-search-action (fallback: shown when no results)
+├── cmdk-list                   (scroll container, role="listbox")
+│   │
+│   └── cmdk-group              (category heading + items container)
+│       │
+│       └── cmdk-item           (single selectable row)
+│       └── cmdk-item
+│       └── cmdk-item
+│   │
+│   └── cmdk-group              (another category)
+│       │
+│       └── cmdk-item
+│       └── cmdk-item
+│   │
+│   └── cmdk-free-search-action (fallback: shown when no results)
+│
+└── keyboard-footer             (keyboard shortcuts reference, always visible)
 ```
 
 Each component in this tree has a precise, limited responsibility that reflects the separation of concerns in the design.
@@ -42,6 +44,15 @@ Each component in this tree has a precise, limited responsibility that reflects 
 **cmdk-item** represents a single command. It receives the full itemData object as a property. It renders the icon, label, and a type hint on the right side (showing "Link" if the item has `href`, "Action" if it has `onClick`, or nothing for navigation items). When clicked or activated via keyboard, it dispatches `cmdk-item-click` with the itemData. The parent (cmdk-palette) then decides what to do next. The item does NOT know if it's a link, action, navigation item, or what comes after selection.
 
 **cmdk-free-search-action** is conditionally shown when search yields no results. It's a purely presentational component that echoes back what the user searched for. It has no state or events of its own.
+
+**keyboard-footer** is a visual reference footer that displays all available keyboard shortcuts with icons and labels. It's purely presentational and does NOT handle any events. It renders keyboard shortcuts for:
+
+- Arrow keys (↑↓) for navigation
+- Enter key for selection
+- Escape (Esc) for going back or closing
+- Command key (⌘ on Mac, Ctrl on Windows) for toggling the palette
+
+This footer is always visible at the bottom of the palette and follows accessibility best practices with ARIA labels and proper semantic HTML. It adapts to the current theme via CSS custom properties.
 
 ### 2. STATE OWNERSHIP
 

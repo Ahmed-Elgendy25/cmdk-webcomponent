@@ -67,10 +67,76 @@ export class CmdkPalette extends LitElement {
       flex-direction: column;
       overflow: hidden;
     }
+
+    .keyboard-footer {
+      display: flex;
+      gap: 12px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--cmdk-border);
+      background: var(--cmdk-surface);
+      font-size: 12px;
+      color: var(--cmdk-muted);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .keyboard-shortcut {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .keyboard-key {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 6px;
+      background: var(--cmdk-bg);
+      border: 1px solid var(--cmdk-border);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      font-family: 'Monaco', 'Courier New', monospace;
+      color: var(--cmdk-text);
+      line-height: 1;
+    }
+
+    .keyboard-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .keyboard-footer {
+        gap: 8px;
+        padding: 10px 12px;
+        font-size: 11px;
+      }
+
+      .keyboard-key {
+        min-width: 20px;
+        height: 20px;
+        padding: 0 4px;
+        font-size: 10px;
+      }
+
+      .keyboard-icon {
+        width: 18px;
+        height: 18px;
+        font-size: 12px;
+      }
+    }
   `;
 
   @property({ type: Array }) pages: CmdkPageData[] = [];
-  @property({ type: String, reflect: true }) page = 'root';
+  @property({ type: String, reflect: true }) currentPage = 'root';
   @property({ type: Boolean, reflect: true }) open = false;
   @property({ type: String }) search = '';
 
@@ -98,7 +164,7 @@ export class CmdkPalette extends LitElement {
   }
 
   get _filteredLists(): CmdkListData[] {
-    const activePage = this.pages.find((p) => p.id === this.page);
+    const activePage = this.pages.find((p) => p.id === this.currentPage);
     if (!activePage) return [];
 
     const query = this.search.toLowerCase();
@@ -140,12 +206,12 @@ export class CmdkPalette extends LitElement {
 
     if (item.page) {
       // Navigate to page
-      this.page = item.page;
+      this.currentPage = item.page;
       this.search = '';
       this.selectedIndex = 0;
       this.dispatchEvent(
         new CustomEvent('cmdk-page', {
-          detail: { page: this.page } as CmdkPageEventDetail,
+          detail: { page: this.currentPage } as CmdkPageEventDetail,
           bubbles: true,
           composed: true,
         }),
@@ -203,8 +269,8 @@ export class CmdkPalette extends LitElement {
       }
       case 'Escape': {
         e.preventDefault();
-        if (this.page !== 'root') {
-          this.page = 'root';
+        if (this.currentPage !== 'root') {
+          this.currentPage = 'root';
           this.search = '';
           this.selectedIndex = 0;
         } else {
@@ -221,9 +287,11 @@ export class CmdkPalette extends LitElement {
       this.selectedIndex = 0;
     }
 
-    // Focus input when opened
+    // Focus panel and input when opened
     if (changedProperties.has('open') && this.open) {
       this.updateComplete.then(() => {
+        const panel = this.shadowRoot?.querySelector('.panel') as any;
+        panel?.focus?.();
         const input = this.shadowRoot?.querySelector('cmdk-input') as any;
         input?.focusInput?.();
       });
@@ -243,7 +311,7 @@ export class CmdkPalette extends LitElement {
         >
           <cmdk-input
             .value=${this.search}
-            .breadcrumb=${this.page !== 'root' ? this.page : ''}
+            .breadcrumb=${this.currentPage !== 'root' ? this.currentPage : ''}
             @cmdk-input=${this._onInputChange}
           ></cmdk-input>
           <cmdk-list>
@@ -271,6 +339,38 @@ export class CmdkPalette extends LitElement {
                 ></cmdk-free-search-action>`
               : nothing}
           </cmdk-list>
+          <footer
+            class="keyboard-footer"
+            role="contentinfo"
+            aria-label="Keyboard shortcuts help"
+          >
+            <div class="keyboard-shortcut">
+              <span class="keyboard-icon" aria-hidden="true">↕️</span>
+              <span class="keyboard-key" aria-label="Arrow up and down keys"
+                >↑↓</span
+              >
+              <span>Navigate</span>
+            </div>
+            <div class="keyboard-shortcut">
+              <span class="keyboard-icon" aria-hidden="true">✓</span>
+              <span class="keyboard-key" aria-label="Enter key">Enter</span>
+              <span>Select</span>
+            </div>
+            <div class="keyboard-shortcut">
+              <span class="keyboard-icon" aria-hidden="true">⎋</span>
+              <span class="keyboard-key" aria-label="Escape key">Esc</span>
+              <span>Back/Close</span>
+            </div>
+            <div class="keyboard-shortcut">
+              <span class="keyboard-icon" aria-hidden="true">⌘</span>
+              <span
+                class="keyboard-key"
+                aria-label="Command key on Mac or Control key on Windows"
+                >⌘K</span
+              >
+              <span>Open</span>
+            </div>
+          </footer>
         </div>
       </div>
     `;

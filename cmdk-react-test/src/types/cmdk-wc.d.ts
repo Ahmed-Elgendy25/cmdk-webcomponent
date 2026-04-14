@@ -28,7 +28,11 @@ declare global {
   interface CmdkPaletteElement extends HTMLElement {
     pages: CmdkPageData[];
     open: boolean;
-    page: string;
+    currentPage: string;
+    page?: string;
+    query: string;
+    isLoading: boolean;
+    placeholder?: string;
   }
 }
 
@@ -44,8 +48,17 @@ declare module 'react' {
         HTMLElement,
         {
           open?: boolean;
+          currentPage?: string;
           page?: string;
           pages?: CmdkPageData[];
+          query?: string;
+          isLoading?: boolean;
+          placeholder?: string;
+          onCmdkSelect?: (e: any) => void;
+          onCmdkPage?: (e: any) => void;
+          onCmdkInput?: (e: any) => void;
+          onOpen?: () => void;
+          onClose?: () => void;
         }
       >;
       'cmdk-input': CustomElement<

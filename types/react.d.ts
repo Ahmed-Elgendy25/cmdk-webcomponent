@@ -15,9 +15,12 @@ import * as React from 'react';
 /**
  * React props for cmdk-palette component
  */
-type CmdkPaletteProps = React.DetailedHTMLProps<
-  React.HTMLAttributes<CmdkPaletteElement>,
-  CmdkPaletteElement
+type CmdkPaletteProps = Omit<
+  React.DetailedHTMLProps<
+    React.HTMLAttributes<CmdkPaletteElement>,
+    CmdkPaletteElement
+  >,
+  'onSelect' | 'onPageChange' | 'onInput' | 'onOpen' | 'onClose'
 > & {
   ref?: React.Ref<CmdkPaletteElement>;
   open?: boolean;
@@ -29,6 +32,9 @@ type CmdkPaletteProps = React.DetailedHTMLProps<
   onSelect?: (event: CustomEvent<CmdkSelectEventDetail>) => void;
   onPageChange?: (event: CustomEvent<CmdkPageEventDetail>) => void;
   onInput?: (event: CustomEvent<CmdkInputEventDetail>) => void;
+  onCmdkSelect?: (event: CustomEvent<CmdkSelectEventDetail>) => void;
+  onCmdkPage?: (event: CustomEvent<CmdkPageEventDetail>) => void;
+  onCmdkInput?: (event: CustomEvent<CmdkInputEventDetail>) => void;
   onOpen?: () => void;
   onClose?: () => void;
 };
@@ -36,12 +42,13 @@ type CmdkPaletteProps = React.DetailedHTMLProps<
 /**
  * React props for cmdk-input component
  */
-type CmdkInputProps = React.DetailedHTMLProps<
-  React.HTMLAttributes<HTMLElement>,
-  HTMLElement
+type CmdkInputProps = Omit<
+  React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>,
+  'onInput'
 > & {
   placeholder?: string;
   onInput?: (event: CustomEvent<CmdkInputEventDetail>) => void;
+  onCmdkInput?: (event: CustomEvent<CmdkInputEventDetail>) => void;
 };
 
 /**
@@ -65,9 +72,9 @@ type CmdkGroupProps = React.DetailedHTMLProps<
 /**
  * React props for cmdk-item component
  */
-type CmdkItemProps = React.DetailedHTMLProps<
-  React.HTMLAttributes<HTMLElement>,
-  HTMLElement
+type CmdkItemProps = Omit<
+  React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>,
+  'onClick'
 > & {
   id?: string;
   onClick?: () => void;

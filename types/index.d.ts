@@ -70,12 +70,16 @@ export interface CmdkPaletteElement extends HTMLElement {
   open: boolean;
   pages: CmdkPageData[];
   currentPage: string;
+  page?: string;
   query: string;
   isLoading: boolean;
   placeholder?: string;
   onSelect?: (detail: CmdkSelectEventDetail) => void;
   onPageChange?: (detail: CmdkPageEventDetail) => void;
   onInput?: (detail: CmdkInputEventDetail) => void;
+  onCmdkSelect?: (detail: CmdkSelectEventDetail) => void;
+  onCmdkPage?: (detail: CmdkPageEventDetail) => void;
+  onCmdkInput?: (detail: CmdkInputEventDetail) => void;
   onOpen?: () => void;
   onClose?: () => void;
 }

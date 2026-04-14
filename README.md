@@ -12,11 +12,11 @@
 ## Features
 
 - 🎯 **Native Web Components** — Works across any framework or vanilla JS
-- ⌨️ **Keyboard Navigation** — Full Cmd+K support, arrow keys, enter to select, escape to close
+- ⌨️ **Keyboard Navigation** — Full Cmd+K support, arrow keys, enter to select, escape to close with built-in visual keyboard shortcuts footer
 - 🔄 **Multi-Page Navigation** — Drill-down into categories with breadcrumb support
 - 🎨 **Themeable** — 14 CSS custom properties for complete visual customization, built-in dark mode
 - 📦 **Lightweight** — ~15KB minified, zero external dependencies beyond Lit
-- 🧩 **Accessible** — ARIA roles, screen reader support, semantic HTML
+- 🧩 **Accessible** — ARIA roles, screen reader support, semantic HTML, keyboard shortcuts footer with aria-labels
 - ✨ **TypeScript** — Full type definitions included for all components and interfaces
 - 🚀 **Framework Agnostic** — Drop into React, Vue, Svelte, Angular, or any framework
 

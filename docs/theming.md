@@ -6,6 +6,14 @@ All colors, spacing, and sizing in cmdk-wc are controlled via CSS custom propert
 
 Every visual aspect of the palette is driven by CSS custom properties set on the `cmdk-palette` element itself. Change a property, and the palette updates instantly. Dark mode is automatic via `prefers-color-scheme: dark`, but you can override it manually.
 
+This includes all UI elements such as:
+
+- Input field and search area
+- Item list and groups
+- **Keyboard shortcuts footer** (displays available keyboard shortcuts with visual indicators)
+- Hover states and selections
+- Focus indicators
+
 ## Scoping a Theme to One Instance
 
 To theme a specific palette instance, set custom properties on that element only:

@@ -1,18 +1,6 @@
-# React Integration
+# React Integration (Props-Based Approach)
 
-Integrate cmdk-wc with React. Learn how to work around React's limitations with web components and custom events.
-
-## The Core Problem
-
-React treats web components differently than native HTML elements in three crucial ways:
-
-**React passes props as DOM attributes.** When you write `<cmdk-palette pages={data} />`, React attempts to set `pages` as an HTML attribute, not a JavaScript property. Since attributes only accept strings, your object becomes the string `"[object Object]"`. This breaks the component because it expects a real array.
-
-**React doesn't recognize CustomEvents.** Event handlers like `onCmdkSelect` don't exist in React's type system. React only knows about standard DOM events. When the palette emits a `cmdk-select` CustomEvent, React's default event handling ignores it entirely.
-
-**TypeScript has no types for custom elements.** Without type declarations, `<cmdk-palette>` is unknown to the JSX compiler, TypeScript complains, and you lose autocomplete.
-
-The solution: use `useRef` to imperatively assign properties, `addEventListener` for custom events, and TypeScript type declarations.
+Use cmdk-wc web components in React by passing data as props.
 
 ## Installation
 
@@ -20,77 +8,9 @@ The solution: use `useRef` to imperatively assign properties, `addEventListener`
 npm install cmdk-wc
 ```
 
-Or from a local monorepo:
+## Setup
 
-```shell
-npm install ../path/to/cmdk-wc
-```
-
-## TypeScript Setup
-
-Create or update `src/types/cmdk-wc.d.ts`:
-
-```typescript
-// Type definitions for cmdk-wc components
-declare module 'cmdk-wc' {}
-
-declare global {
-  // Data model interfaces
-  interface CmdkItemData {
-    id: string;
-    label: string;
-    icon?: string;
-    href?: string;
-    page?: string;
-    closeOnSelect?: boolean;
-    onClick?: () => void;
-  }
-
-  interface CmdkListData {
-    id: string;
-    heading: string;
-    items: CmdkItemData[];
-  }
-
-  interface CmdkPageData {
-    id: string;
-    lists: CmdkListData[];
-  }
-
-  // Palette element type
-  interface CmdkPaletteElement extends HTMLElement {
-    pages: CmdkPageData[];
-    open: boolean;
-    page: string;
-  }
-
-  // JSX namespace augmentation for all cmdk-* components
-  namespace JSX {
-    interface IntrinsicElements {
-      'cmdk-palette': CustomElement<CmdkPaletteElement>;
-      'cmdk-input': CustomElement<HTMLElement>;
-      'cmdk-list': CustomElement<HTMLElement>;
-      'cmdk-group': CustomElement<HTMLElement>;
-      'cmdk-item': CustomElement<HTMLElement>;
-      'cmdk-free-search-action': CustomElement<HTMLElement>;
-    }
-  }
-
-  // Generic type for custom elements in React
-  type CustomElement<T> = React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLElement> & {
-      ref?: React.Ref<T>;
-    },
-    HTMLElement
-  >;
-}
-
-export {};
-```
-
-## Registering the Components
-
-In `src/main.tsx`, import the package at the top _before_ any other application code:
+In `src/main.tsx`, import the components at the top:
 
 ```typescript
 import 'cmdk-wc';
@@ -106,73 +26,155 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 );
 ```
 
-The side-effect import registers all custom elements globally.
+## Basic Usage with Props
 
-## Basic Usage
-
-Here's a minimal example showing the required patterns:
+Pass data directly as props to the component:
 
 ```typescript
-import { useRef, useState, useEffect } from 'react';
+import { useState } from 'react';
+import type { CmdkPageData } from 'cmdk-wc';
+
+const pages: CmdkPageData[] = [
+  {
+    id: 'root',
+    lists: [
+      {
+        id: 'main',
+        heading: 'Main',
+        items: [
+          { id: 'home', label: 'Home', icon: '🏠', href: '#' },
+          { id: 'settings', label: 'Settings', icon: '⚙️', href: '#' },
+          { id: 'projects', label: 'Projects', icon: '📁', page: 'projects', closeOnSelect: false },
+        ],
+      },
+      {
+        id: 'other',
+        heading: 'Other',
+        items: [
+          { id: 'help', label: 'Help', icon: '❓', href: '#' },
+          { id: 'logout', label: 'Log out', icon: '🚪', onClick: () => alert('Logging out...') },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'projects',
+    lists: [
+      {
+        id: 'projects-list',
+        heading: 'Projects',
+        items: [
+          { id: 'hobby', label: 'Hobby project', icon: '🎮', onClick: () => alert('Opening hobby project...') },
+          { id: 'work', label: 'Work project', icon: '💼', onClick: () => alert('Opening work project...') },
+        ],
+      },
+    ],
+  },
+];
 
 export default function App() {
-  const paletteRef = useRef<HTMLElement>(null);
-  const [open, setOpen] = useState(false);
-
-  // Assign pages data imperatively
-  useEffect(() => {
-    if (paletteRef.current) {
-      paletteRef.current.pages = [
-        {
-          id: 'root',
-          lists: [
-            {
-              id: 'actions',
-              heading: 'Actions',
-              items: [
-                { id: 'new', label: 'New File', icon: '✨' },
-                { id: 'settings', label: 'Settings', icon: '⚙️' },
-              ]
-            }
-          ]
-        }
-      ];
-    }
-  }, []);
-
-  // Sync open state
-  useEffect(() => {
-    if (paletteRef.current) {
-      paletteRef.current.open = open;
-    }
-  }, [open]);
-
-  // Attach event listeners
-  useEffect(() => {
-    const palette = paletteRef.current;
-    if (!palette) return;
-
-    const handleSelect = (e: Event) => {
-      const event = e as CustomEvent;
-      console.log('Selected:', event.detail.label);
-      setOpen(false);
-    };
-
-    palette.addEventListener('cmdk-select', handleSelect);
-    return () => palette.removeEventListener('cmdk-select', handleSelect);
-  }, []);
+  const [open, setOpen] = useState(true);
 
   return (
-    <>
-      <button onClick={() => setOpen(!open)}>
-        Open Palette
-      </button>
-      {/* Note: open is set as a boolean property or 'undefined', not as an attribute */}
-      <cmdk-palette ref={paletteRef} open={open || undefined} />
-    </>
+    <cmdk-palette
+      open={open}
+      pages={pages}
+      currentPage="root"
+      placeholder="Search commands..."
+      onCmdkSelect={(e: any) => console.log('Selected:', e.detail)}
+      onCmdkPage={(e: any) => console.log('Page changed:', e.detail)}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+    />
   );
 }
 ```
+
+## Event Handlers
+
+The component emits custom events that can be handled via event attributes:
+
+- `onCmdkSelect` - Fired when a user selects an item
+- `onCmdkPage` - Fired when navigation to a different page occurs
+- `onCmdkInput` - Fired when search input changes
+- `onOpen` - Fired when the palette opens
+- `onClose` - Fired when the palette closes
+
+Example with full event handling:
+
+```typescript
+<cmdk-palette
+  open={open}
+  pages={pages}
+  currentPage="home"
+  placeholder="Search..."
+  onCmdkSelect={(event: CustomEvent) => {
+    const { id, label } = event.detail;
+    console.log(`Selected: ${label} (${id})`);
+  }}
+  onCmdkPage={(event: CustomEvent) => {
+    const { page } = event.detail;
+    console.log(`Navigated to: ${page}`);
+  }}
+  onCmdkInput={(event: CustomEvent) => {
+    const { query } = event.detail;
+    console.log(`Search: ${query}`);
+  }}
+  onOpen={() => console.log('Opened')}
+  onClose={() => console.log('Closed')}
+/>
+```
+
+## Keyboard Shortcuts
+
+The component supports the following keyboard interactions:
+
+| Key                | Action                                |
+| ------------------ | ------------------------------------- |
+| `Cmd+K` / `Ctrl+K` | Toggle palette open/closed            |
+| `Arrow Up`         | Select previous item                  |
+| `Arrow Down`       | Select next item                      |
+| `Enter`            | Activate selected item                |
+| `Escape`           | Go back to root page or close palette |
+
+Keyboard shortcuts work immediately when the palette is open without requiring additional focus.
+
+## Keyboard Shortcuts Footer
+
+The palette displays a helpful footer with visual indicators for all available keyboard shortcuts:
+
+- **↕️ ↑↓** - Navigate items using arrow keys
+- **✓ Enter** - Select the highlighted item
+- **⎋ Esc** - Go back to previous page or close palette
+- **⌘K** - Toggle palette open/closed (⌘ on Mac, Ctrl on Windows)
+
+This footer is always visible at the bottom of the palette and serves as a quick reference guide for users. It follows accessibility best practices with proper ARIA labels and is fully responsive on mobile devices.
+
+## Props Reference
+
+| Prop          | Type           | Description                     |
+| ------------- | -------------- | ------------------------------- |
+| `open`        | boolean        | Whether the palette is visible  |
+| `pages`       | CmdkPageData[] | Array of page data              |
+| `currentPage` | string         | ID of the currently active page |
+| `placeholder` | string         | Search input placeholder text   |
+| `query`       | string         | Current search query            |
+| `isLoading`   | boolean        | Show loading state              |
+
+}, []);
+
+return (
+<>
+<button onClick={() => setOpen(!open)}>
+Open Palette
+</button>
+{/_ Note: open is set as a boolean property or 'undefined', not as an attribute _/}
+<cmdk-palette ref={paletteRef} open={open || undefined} />
+</>
+);
+}
+
+````
 
 ## Full Example
 
@@ -561,3 +563,4 @@ Pass CSS custom properties to `cmdk-palette`:
 ```
 
 See [Theming Guide](./theming.md) for complete reference.
+````

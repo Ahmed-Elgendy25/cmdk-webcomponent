@@ -224,50 +224,24 @@ Below is a complete, standalone HTML file that demonstrates all features:
           id: 'root',
           lists: [
             {
-              id: 'actions',
-              heading: 'Actions',
+              id: 'main',
+              heading: 'Main',
               items: [
-                { id: 'create', label: 'Create New File', icon: '✨' },
-                { id: 'search', label: 'Search...' icon: '🔍' },
-                { id: 'settings', label: 'Settings', icon: '⚙️' },
+                { id: 'home', label: 'Home', icon: '🏠', href: '#' },
+                { id: 'settings', label: 'Settings', icon: '⚙️', href: '#' },
+                { id: 'projects', label: 'Projects', icon: '📁', page: 'projects', closeOnSelect: false },
               ]
             },
             {
-              id: 'projects',
-              heading: 'Projects',
+              id: 'other',
+              heading: 'Other',
               items: [
-                { id: 'projects-page', label: 'View All Projects', icon: '📁', page: 'projects' },
+                { id: 'help', label: 'Help', icon: '❓', href: '#' },
+                { id: 'logout', label: 'Log out', icon: '🚪', onClick: () => alert('Logging out...') },
               ]
             }
           ]
-        },
-        {
-          id: 'projects',
-          lists: [
-            {
-              id: 'recent',
-              heading: 'Recent Projects',
-              items: [
-                { id: 'proj-1', label: 'Portfolio Site', icon: '🌐' },
-                { id: 'proj-2', label: 'Mobile App', icon: '📱' },
-                { id: 'proj-3', label: 'Design System', icon: '🎨' },
-              ]
-            },
-            {
-              id: 'archived',
-              heading: 'Archived',
-              items: [
-                { id: 'proj-4', label: 'Old Experiment', icon: '🗂️' },
-              ]
-            }
-          ]
-        }
-      ];
-
-      // Initialize palette properties
-      palette.pages = pages;
-      palette.open = false;
-      palette.page = 'root';
+        },\n        {\n          id: 'projects',\n          lists: [\n            {\n              id: 'projects-list',\n              heading: 'Projects',\n              items: [\n                { id: 'hobby', label: 'Hobby project', icon: '🎮', onClick: () => alert('Opening hobby project...') },\n                { id: 'work', label: 'Work project', icon: '💼', onClick: () => alert('Opening work project...') },\n              ]\n            }\n          ]\n        }\n      ];\n\n      // Initialize palette properties\n      palette.pages = pages;\n      palette.open = false;\n      palette.currentPage = 'root';
 
       // Toggle button functionality
       toggleBtn.addEventListener('click', () => {
@@ -379,6 +353,17 @@ The palette responds to these keys:
 - **Enter** — Activate (select) the focused item. If the item has a `page` property, navigates to that page; otherwise, emits `cmdk-select`.
 - **Escape** — Go back to the previous page. If already on the root page, close the palette.
 - **Backspace** — Go back one page only if the search input is empty and you are not on the root page.
+
+## Keyboard Shortcuts Footer
+
+The palette displays a helpful footer with visual indicators for all available keyboard shortcuts:
+
+- **↕️ ↑↓** - Navigate items using arrow keys
+- **✓ Enter** - Select the highlighted item
+- **⎋ Esc** - Go back to previous page or close palette
+- **⌘ ⌘K** - Toggle palette open/closed (⌘ on Mac, Ctrl on Windows)
+
+This footer is always visible at the bottom of the palette and serves as a quick reference guide for users. It follows accessibility best practices with proper ARIA labels and is fully responsive on mobile devices.
 
 ## Theming
 

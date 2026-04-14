@@ -1,3 +1,16 @@
+/* Custom cmdk-palette theme */
+cmdk-palette {
+  --cmdk-bg: #1a1a2e;
+  --cmdk-text: #eaeaea;
+  --cmdk-accent: #00d4ff;
+  --cmdk-accent-hover: #00a8cc;
+  --cmdk-muted: #888888;
+  --cmdk-border: #2d3561;
+  --cmdk-surface: #16213e;
+  --cmdk-overlay: rgba(0, 0, 0, 0.8);
+  --cmdk-radius: 12px;
+}
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;

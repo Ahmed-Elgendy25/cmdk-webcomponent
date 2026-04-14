@@ -13,7 +13,8 @@
       "require": "./dist/cmdk-wc.umd.js"
     },
     "./react": {
-      "types": "./types/react.d.ts"
+      "types": "./types/react.d.ts",
+      "default": "./dist/cmdk-wc.es.js"
     },
     "./vue": {
       "types": "./types/vue.d.ts"
