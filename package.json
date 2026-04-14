@@ -47,15 +47,15 @@
     "vite": "^8.0.4",
     "vite-plugin-dts": "^4.5.4"
   },
-  "keywords": [
-    "web-component",
-    "lit",
-    "cmdk",
-    "command-palette",
-    "ui",
-    "cmdk webcomponent",
-    "cmdk-webcomponent",
-  ],
+ "keywords": [
+  "web-component",
+  "lit",
+  "cmdk",
+  "command-palette",
+  "ui",
+  "cmdk webcomponent",
+  "cmdk-webcomponent"
+]
   "author": "Ahmed Ashraf",
   "license": "MIT",
   "repository": {
