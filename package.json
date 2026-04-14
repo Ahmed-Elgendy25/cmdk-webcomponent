@@ -5,16 +5,32 @@
   "type": "module",
   "main": "./dist/cmdk-wc.umd.js",
   "module": "./dist/cmdk-wc.es.js",
-  "types": "./dist/index.d.ts",
+  "types": "./types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./types/index.d.ts",
       "import": "./dist/cmdk-wc.es.js",
       "require": "./dist/cmdk-wc.umd.js"
+    },
+    "./react": {
+      "types": "./types/react.d.ts"
+    },
+    "./vue": {
+      "types": "./types/vue.d.ts"
+    },
+    "./angular": {
+      "types": "./types/angular.d.ts"
+    },
+    "./svelte": {
+      "types": "./types/svelte.d.ts"
+    },
+    "./solid": {
+      "types": "./types/solid.d.ts"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "scripts": {
     "dev": "vite",
