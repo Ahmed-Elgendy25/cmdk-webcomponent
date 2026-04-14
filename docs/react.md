@@ -73,19 +73,38 @@ const pages: CmdkPageData[] = [
 ];
 
 export default function App() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState('root');
+
+  const togglePalette = () => {
+    setOpen(!open);
+  };
+
+  const handleSelect = (e: any) => {
+    console.log('Selected:', e.detail);
+  };
+
+  const handlePageChange = (e: any) => {
+    setCurrentPage(e.detail.page);
+    console.log('Page changed:', e.detail);
+  };
 
   return (
-    <cmdk-palette
-      open={open}
-      pages={pages}
-      currentPage="root"
-      placeholder="Search commands..."
-      onCmdkSelect={(e: any) => console.log('Selected:', e.detail)}
-      onCmdkPage={(e: any) => console.log('Page changed:', e.detail)}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
-    />
+    <div>
+      <button onClick={togglePalette}>
+        {open ? 'Close Palette' : 'Open Palette'}
+      </button>
+      <cmdk-palette
+        open={open}
+        pages={pages}
+        currentPage={currentPage}
+        placeholder="Search commands..."
+        onCmdkSelect={handleSelect}
+        onCmdkPage={handlePageChange}
+        onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
+      />
+    </div>
   );
 }
 ```

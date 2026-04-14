@@ -31,7 +31,7 @@ Use the component in your Svelte template:
 <script lang="ts">
   import type { CmdkPageData } from 'cmdk-wc';
 
-  let open = true;
+  let open = false;
   let currentPage = 'root';
 
   const pages: CmdkPageData[] = [
@@ -72,6 +72,10 @@ Use the component in your Svelte template:
     },
   ];
 
+  const togglePalette = () => {
+    open = !open;
+  };
+
   const handleSelect = (event: CustomEvent) => {
     const { id, label } = event.detail;
     console.log(`Selected: ${label} (${id})`);
@@ -84,16 +88,21 @@ Use the component in your Svelte template:
   };
 </script>
 
-<cmdk-palette
-  open={open}
-  pages={pages}
-  currentPage={currentPage}
-  placeholder="Search commands..."
-  on:cmdkSelect={handleSelect}
-  on:cmdkPage={handlePageChange}
-  on:open={() => (open = true)}
-  on:close={() => (open = false)}
-/>
+<div>
+  <button on:click={togglePalette}>
+    {open ? 'Close Palette' : 'Open Palette'}
+  </button>
+  <cmdk-palette
+    {open}
+    {pages}
+    {currentPage}
+    placeholder="Search commands..."
+    on:cmdkSelect={handleSelect}
+    on:cmdkPage={handlePageChange}
+    on:open={() => (open = true)}
+    on:close={() => (open = false)}
+  />
+</div>
 ```
 
 ## Event Handlers

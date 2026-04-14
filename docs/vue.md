@@ -26,24 +26,33 @@ Use the component in your Vue template:
 
 ```vue
 <template>
-  <cmdk-palette
-    :open="open"
-    :pages="pages"
-    :currentPage="currentPage"
-    placeholder="Search commands..."
-    @cmdkSelect="handleSelect"
-    @cmdkPage="handlePageChange"
-    @open="open = true"
-    @close="open = false"
-  />
+  <div>
+    <button @click="togglePalette">
+      {{ open ? 'Close Palette' : 'Open Palette' }}
+    </button>
+    <cmdk-palette
+      :open="open"
+      :pages="pages"
+      :currentPage="currentPage"
+      placeholder="Search commands..."
+      @cmdkSelect="handleSelect"
+      @cmdkPage="handlePageChange"
+      @open="open = true"
+      @close="open = false"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { CmdkPageData } from 'cmdk-wc';
 
-const open = ref(true);
+const open = ref(false);
 const currentPage = ref('root');
+
+const togglePalette = () => {
+  open.value = !open.value;
+};
 
 const pages: CmdkPageData[] = [
   {

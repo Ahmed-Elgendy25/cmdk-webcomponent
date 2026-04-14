@@ -29,7 +29,7 @@ import { createSignal } from 'solid-js';
 import type { CmdkPageData } from 'cmdk-wc';
 
 export default function App() {
-  const [open, setOpen] = createSignal(true);
+  const [open, setOpen] = createSignal(false);
   const [currentPage, setCurrentPage] = createSignal('root');
 
   const pages: CmdkPageData[] = [
@@ -70,6 +70,10 @@ export default function App() {
     },
   ];
 
+  const togglePalette = () => {
+    setOpen(!open());
+  };
+
   const handleSelect = (event: CustomEvent) => {
     const { id, label } = event.detail;
     console.log(`Selected: ${label} (${id})`);
@@ -82,16 +86,21 @@ export default function App() {
   };
 
   return (
-    <cmdk-palette
-      open={open()}
-      pages={pages}
-      currentPage={currentPage()}
-      placeholder="Search commands..."
-      onCmdkSelect={handleSelect}
-      onCmdkPage={handlePageChange}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
-    />
+    <div>
+      <button onClick={togglePalette}>
+        {open() ? 'Close Palette' : 'Open Palette'}
+      </button>
+      <cmdk-palette
+        open={open()}
+        pages={pages}
+        currentPage={currentPage()}
+        placeholder="Search commands..."
+        onCmdkSelect={handleSelect}
+        onCmdkPage={handlePageChange}
+        onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
+      />
+    </div>
   );
 }
 ```

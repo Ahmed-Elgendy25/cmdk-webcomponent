@@ -37,20 +37,25 @@ import type { CmdkPageData } from 'cmdk-wc';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <cmdk-palette
-      [attr.open]="open"
-      [attr.pages]="pages | json"
-      [attr.currentPage]="currentPage"
-      placeholder="Search commands..."
-      (cmdkSelect)="handleSelect($event)"
-      (cmdkPage)="handlePageChange($event)"
-      (open)="open = true"
-      (close)="open = false"
-    ></cmdk-palette>
+    <div>
+      <button (click)="togglePalette()">
+        {{ open ? 'Close Palette' : 'Open Palette' }}
+      </button>
+      <cmdk-palette
+        [attr.open]="open"
+        [attr.pages]="pages | json"
+        [attr.currentPage]="currentPage"
+        placeholder="Search commands..."
+        (cmdkSelect)="handleSelect($event)"
+        (cmdkPage)="handlePageChange($event)"
+        (open)="open = true"
+        (close)="open = false"
+      ></cmdk-palette>
+    </div>
   `,
 })
 export class AppComponent {
-  open = true;
+  open = false;
   currentPage = 'root';
 
   pages: CmdkPageData[] = [
@@ -111,6 +116,10 @@ export class AppComponent {
       ],
     },
   ];
+
+  togglePalette() {
+    this.open = !this.open;
+  }
 
   handleSelect(event: CustomEvent) {
     const { id, label } = event.detail;
