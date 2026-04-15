@@ -10,8 +10,15 @@
 
 ---
 
+## Demo
+
+<img src="./public/cmdk-wc-demo.gif" alt="cmdk-wc Demo" style="width: 100%; max-width: 800px; object-fit: cover; border-radius: 12px;" />
+
+---
+
 ## Table of Contents
 
+- [Demo](#demo)
 - [Features](#features)
 - [About cmdk-wc](#about-cmdk-wc)
 - [Installation](#installation)
