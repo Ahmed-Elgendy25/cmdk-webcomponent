@@ -12,7 +12,7 @@ export class CmdkItem extends LitElement {
     .item {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       gap: 8px;
       padding: 8px 8px;
       margin: 0 8px;
@@ -38,6 +38,7 @@ export class CmdkItem extends LitElement {
     .left {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       flex: 1;
       min-width: 0;
@@ -55,6 +56,7 @@ export class CmdkItem extends LitElement {
 
     .label {
       flex: 1;
+      text-align: center;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -66,6 +68,8 @@ export class CmdkItem extends LitElement {
       align-items: center;
       gap: 6px;
       flex-shrink: 0;
+      position: absolute;
+      right: 8px;
     }
 
     .type-hint {

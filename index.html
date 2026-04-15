@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cmdk-webcomponent</title>
+    <title>cmdk-wc — Fast, extensible command menus</title>
     <style>
       * {
         margin: 0;
@@ -11,332 +11,1138 @@
         box-sizing: border-box;
       }
 
-      html,
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-          'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-          'Helvetica Neue', sans-serif;
-        background: #ffffff;
-        color: #0f172a;
-      }
-
-      @media (prefers-color-scheme: dark) {
-        html,
-        body {
-          background: #0f172a;
-          color: #f1f5f9;
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
       }
 
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
       body {
-        padding: 24px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #0b0f19;
+        color: #e5e7eb;
         min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
       }
 
-      .container {
-        max-width: 800px;
+      body {
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Hero Section */
+      .hero {
+        max-width: 1400px;
         margin: 0 auto;
+        padding: 60px 24px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+        animation: fadeInDown 0.8s ease-out;
       }
 
-      h1 {
-        font-size: 32px;
-        margin-bottom: 8px;
-        font-weight: 700;
+      .hero-content {
+        animation: slideInLeft 0.8s ease-out;
       }
 
-      p {
-        font-size: 14px;
-        color: #64748b;
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(99, 102, 241, 0.15);
+        border: 1px solid rgba(99, 102, 241, 0.4);
+        border-radius: 999px;
+        padding: 6px 14px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: #60a5fa;
         margin-bottom: 24px;
+        text-transform: uppercase;
+      }
+
+      .badge::before {
+        content: '✦';
+      }
+
+      .hero h1 {
+        font-size: 64px;
+        font-weight: 900;
+        margin-bottom: 24px;
+        line-height: 1.2;
+        letter-spacing: -2px;
+        color: #e5e7eb;
+      }
+
+      .hero h1 .cyan {
+        background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero h1 .blue {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero p {
+        font-size: 16px;
+        color: #9ca3af;
+        max-width: 400px;
+        margin-bottom: 32px;
         line-height: 1.6;
       }
 
-      .demo-section {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
+      .hero-buttons {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 12px 28px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: #e5e7eb;
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #4f46e5, #4338ca);
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(99, 102, 241, 0.35);
+      }
+
+      .btn-secondary {
+        background: rgba(99, 102, 241, 0.1);
+        color: #e5e7eb;
+        border: 1.5px solid #374151;
+      }
+
+      .btn-secondary:hover {
+        background: rgba(99, 102, 241, 0.2);
+        border-color: #60a5fa;
+      }
+
+      .hero-preview {
+        animation: slideInRight 0.8s ease-out;
+        position: relative;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .palette-mockup {
+        background: rgba(31, 41, 55, 0.6);
+        border: 1px solid #374151;
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        padding: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      }
+
+      .palette-input {
+        background: rgba(17, 24, 39, 0.8);
+        border: 1px solid #374151;
         border-radius: 8px;
-        padding: 24px;
-        margin-bottom: 24px;
+        padding: 12px 16px;
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
 
-      @media (prefers-color-scheme: dark) {
-        .demo-section {
-          background: #1e293b;
-          border-color: #334155;
-        }
+      .palette-input::before {
+        content: '🔍';
+        opacity: 0.5;
       }
 
-      .demo-section h2 {
-        font-size: 18px;
-        margin-bottom: 12px;
-        font-weight: 600;
+      .palette-items {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
       }
 
-      .demo-section p {
-        margin-bottom: 12px;
-      }
-
-      .keyboard-hint {
-        font-size: 12px;
-        color: #64748b;
-        font-family: 'Monaco', 'Courier New', monospace;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
+      .palette-item {
+        background: rgba(31, 41, 55, 0.5);
+        border-left: 2px solid transparent;
+        padding: 12px 12px;
         border-radius: 4px;
-        padding: 8px 12px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #d1d5db;
+      }
+
+      .palette-item:hover {
+        background: rgba(99, 102, 241, 0.15);
+        border-left-color: #6366f1;
+      }
+
+      .palette-item.active {
+        background: rgba(99, 102, 241, 0.25);
+        border-left-color: #6366f1;
+        color: #60a5fa;
+      }
+
+      .palette-section {
+        padding: 8px 0;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6b7280;
+        margin-top: 8px;
+        margin-bottom: 4px;
+      }
+
+      /* Features Section */
+      .features {
+        padding: 120px 24px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+      }
+
+      .feature-col {
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      .feature-col h3 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: #e5e7eb;
+      }
+
+      .feature-col p {
+        font-size: 15px;
+        color: #9ca3af;
+        line-height: 1.7;
+        margin-bottom: 16px;
+      }
+
+      .feature-col .badge {
+        display: inline-flex;
+      }
+
+      .feature-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+
+      /* Framework Section */
+      .framework-section {
+        margin-top: 80px;
+        padding: 60px 24px;
+      }
+
+      .framework-section h2 {
+        font-size: 40px;
+        font-weight: 800;
+        margin-bottom: 16px;
+        color: #60a5fa;
+        text-align: center;
+      }
+
+      .framework-section p {
+        font-size: 16px;
+        color: #9ca3af;
+        max-width: 600px;
+        margin: 0 auto 32px;
+        line-height: 1.6;
+        text-align: center;
+      }
+
+      .framework-badges {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .badge-tag {
         display: inline-block;
-        margin-top: 12px;
-      }
-
-      @media (prefers-color-scheme: dark) {
-        .keyboard-hint {
-          background: #0f172a;
-          border-color: #334155;
-        }
-      }
-
-      #events-log {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 4px;
-        padding: 12px;
         font-size: 12px;
+        background: rgba(99, 102, 241, 0.15);
+        border: 1.5px solid #374151;
+        padding: 8px 16px;
+        border-radius: 8px;
+        color: #60a5fa;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .badge-tag:hover {
+        background: rgba(99, 102, 241, 0.25);
+        border-color: #60a5fa;
+        box-shadow: 0 0 20px rgba(96, 165, 250, 0.2);
+      }
+
+      /* Hero Stats */
+      .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-top: 60px;
+        padding: 40px;
+        background: rgba(99, 102, 241, 0.08);
+        border: 1px solid #374151;
+        border-radius: 12px;
+      }
+
+      .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .stat-value {
+        font-size: 36px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #60a5fa, #6366f1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-align: center;
+      }
+
+      /* Install Section */
+      .install-section {
+        padding: 120px 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .install-section h2 {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 16px;
+        color: #e5e7eb;
+        text-align: center;
+      }
+
+      .install-section p {
+        font-size: 16px;
+        color: #9ca3af;
+        margin-bottom: 48px;
+        text-align: center;
+      }
+
+      .install-tabs {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+      }
+
+      .tab {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 13px;
+        cursor: pointer;
+        border: 1.5px solid #374151;
+        background: transparent;
+        color: #9ca3af;
+        transition: all 0.3s ease;
+      }
+
+      .tab:hover {
+        border-color: #60a5fa;
+        color: #60a5fa;
+        background: rgba(96, 165, 250, 0.1);
+      }
+
+      .tab.active {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        border-color: #6366f1;
+        color: #e5e7eb;
+      }
+
+      .code-block {
+        background: rgba(31, 41, 55, 0.6);
+        border: 1px solid #374151;
+        border-radius: 12px;
+        padding: 24px;
+        display: none;
+        text-align: left;
+        max-width: 600px;
+        margin: 0 auto;
         font-family: 'Monaco', 'Courier New', monospace;
-        max-height: 200px;
-        overflow: auto;
-        margin-top: 12px;
-        color: #0f172a;
+        font-size: 13px;
+        line-height: 1.6;
+        color: #d1d5db;
+        overflow-x: auto;
       }
 
-      @media (prefers-color-scheme: dark) {
-        #events-log {
-          background: #0f172a;
-          border-color: #334155;
-          color: #f1f5f9;
+      .code-block.active {
+        display: block;
+      }
+
+      /* Footer */
+      footer {
+        padding: 48px 24px;
+        border-top: 1px solid #374151;
+        font-size: 13px;
+        color: #9ca3af;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      footer a {
+        color: #60a5fa;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      footer a:hover {
+        color: #6366f1;
+      }
+
+      @media (max-width: 768px) {
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 40px;
         }
-      }
 
-      .event-line {
-        padding: 4px 0;
-        border-bottom: 1px solid #e2e8f0;
-      }
-
-      @media (prefers-color-scheme: dark) {
-        .event-line {
-          border-bottom-color: #334155;
+        .hero h1 {
+          font-size: 40px;
         }
-      }
 
-      .event-line:last-child {
-        border-bottom: none;
-      }
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
 
-      .event-time {
-        color: #94a3b8;
-        margin-right: 8px;
-      }
-
-      .event-type {
-        color: #3b82f6;
-        font-weight: 600;
+        .hero-stats {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>cmdk Web Component</h1>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="badge">v1.2.0 RELEASED</div>
+        <h1>Fast, extensible <span class="cyan">command menus</span></h1>
+        <p>
+          The ultimate interface for power users. Fully composable, unstyled
+          command menu primitive for the web. Built with performance and
+          accessibility in mind.
+        </p>
+        <div class="hero-buttons">
+          <button class="btn btn-primary" onclick="openPalette()">
+            Try it ↗
+          </button>
+          <a
+            class="btn btn-secondary"
+            href="https://github.com/Ahmed-Elgendy25/cmdk-webcomponent"
+            target="_blank"
+            >View on GitHub</a
+          >
+        </div>
+      </div>
+
+      <div class="hero-preview">
+        <div class="palette-mockup">
+          <div class="palette-input">Type a command or search...</div>
+          <div class="palette-items">
+            <div class="palette-section">Suggestions</div>
+            <div class="palette-item active">📚 Search Documentation...</div>
+            <div class="palette-item">✨ Create New Project...</div>
+            <div class="palette-item">🎨 Change Theme...</div>
+            <div class="palette-section">Navigation</div>
+            <div class="palette-item">🏠 Go Home</div>
+            <div class="palette-item">👤 View Profile</div>
+          </div>
+          <div
+            style="
+              font-size: 11px;
+              color: #404040;
+              margin-top: 12px;
+              text-align: right;
+            "
+          >
+            esc to close · ↵ to navigate
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+      <div class="features-grid">
+        <div class="feature-col">
+          <h3>Hyper-Performance</h3>
+          <p>
+            Optimized for speed. Zero flicker, instant filtering, and
+            sub-millisecond response times even with thousands of items.
+          </p>
+        </div>
+        <div class="feature-col">
+          <div class="feature-icon">📱</div>
+          <h3>First-class A11y</h3>
+          <p>
+            Built following WAI-ARIA standards. Screen reader support and full
+            keyboard navigation out of the box.
+          </p>
+        </div>
+        <div class="feature-col">
+          <div class="feature-icon">🎨</div>
+          <h3>Extensible</h3>
+          <p>
+            Easily add custom rendering, async data fetching, and nested menu
+            structures.
+          </p>
+        </div>
+      </div>
+
+      <div class="framework-section">
+        <h2>Framework Agnostic</h2>
+        <p>
+          Whether you're building with React, Vue, or vanilla HTML, cmdk
+          provides a consistent and powerful API for all your interfaces.
+        </p>
+        <div class="framework-badges">
+          <span class="badge-tag">HTML5</span>
+          <span class="badge-tag">React</span>
+          <span class="badge-tag">Vue</span>
+          <span class="badge-tag">Svelte</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Install Section -->
+    <section class="install-section">
+      <h2>Install in seconds</h2>
+      <p>Pick your flavor and start building better interfaces.</p>
+
+      <div class="install-tabs">
+        <button class="tab active" onclick="showTab('npm', this)">NPM</button>
+        <button class="tab" onclick="showTab('vanilla', this)">Vanilla</button>
+        <button class="tab" onclick="showTab('react', this)">React</button>
+        <button class="tab" onclick="showTab('vue', this)">Vue</button>
+        <button class="tab" onclick="showTab('angular', this)">Angular</button>
+        <button class="tab" onclick="showTab('svelte', this)">Svelte</button>
+      </div>
+
+      <div id="tab-npm" class="code-block active">
+        <span style="color: #60a5fa"># Install from npm</span><br />
+        $ <span style="color: #a78bfa">npm</span> install
+        <span style="color: #6366f1">cmdk-wc</span>
+      </div>
+
+      <div id="tab-vanilla" class="code-block">
+        <span style="color: #a78bfa">const</span> pages = [<br />
+        &nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;id: <span style="color: #fca5a5">'root'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;lists: [{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id: <span style="color: #fca5a5">'main'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;heading: <span style="color: #fca5a5">'Main'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;items: [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id: <span style="color: #fca5a5">'home'</span>, label: <span style="color: #fca5a5">'Home'</span>, icon: <span style="color: #fca5a5">'🏠'</span>, href: <span style="color: #fca5a5">'#'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id: <span style="color: #fca5a5">'settings'</span>, label: <span style="color: #fca5a5">'Settings'</span>, icon: <span style="color: #fca5a5">'⚙️'</span>, href: <span style="color: #fca5a5">'#'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;}],<br />
+        &nbsp;&nbsp;},<br />
+        ]<span style="color: #6b7280">;</span><br />
+        <br />
+        <span style="color: #a78bfa">const</span> palette = document.getElementById(<span style="color: #fca5a5">'palette'</span>)<span style="color: #6b7280">;</span><br />
+        palette.pages = pages<span style="color: #6b7280">;</span><br />
+        palette.open = <span style="color: #fca5a5">false</span><span style="color: #6b7280">;</span><br />
+        palette.currentPage = <span style="color: #fca5a5">'root'</span><span style="color: #6b7280">;</span><br />
+        <br />
+        <span style="color: #a78bfa">const</span> toggleBtn = document.getElementById(<span style="color: #fca5a5">'toggle-btn'</span>)<span style="color: #6b7280">;</span><br />
+        toggleBtn.addEventListener(<span style="color: #fca5a5">'click'</span>, () =&gt; {<br />
+        &nbsp;&nbsp;palette.open = !palette.open<span style="color: #6b7280">;</span><br />
+        })<span style="color: #6b7280">;</span><br />
+        <br />
+        palette.addEventListener(<span style="color: #fca5a5">'cmdk-select'</span>, (e) =&gt; {<br />
+        &nbsp;&nbsp;console.log(<span style="color: #fca5a5">'Selected:'</span>, e.detail)<span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;palette.open = <span style="color: #fca5a5">false</span><span style="color: #6b7280">;</span><br />
+        })<span style="color: #6b7280">;</span><br />
+        <br />
+        palette.addEventListener(<span style="color: #fca5a5">'cmdk-page'</span>, (e) =&gt; {<br />
+        &nbsp;&nbsp;console.log(<span style="color: #fca5a5">'Page changed:'</span>, e.detail)<span style="color: #6b7280">;</span><br />
+        })<span style="color: #6b7280">;</span><br />
+        <br />
+        document.addEventListener(<span style="color: #fca5a5">'keydown'</span>, (e) =&gt; {<br />
+        &nbsp;&nbsp;<span style="color: #a78bfa">if</span> ((e.metaKey || e.ctrlKey) &amp;&amp; e.key === <span style="color: #fca5a5">'k'</span>) {<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;e.preventDefault()<span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;palette.open = !palette.open<span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;}<br />
+        })<span style="color: #6b7280">;</span>
+      </div>
+
+      <div id="tab-react" class="code-block">
+        <span style="color: #a78bfa">import</span> { useState }
+        <span style="color: #a78bfa">from</span>
+        <span style="color: #fca5a5">'react'</span
+        ><span style="color: #6b7280">;</span><br />
+        <span style="color: #a78bfa">import</span>
+        <span style="color: #a78bfa">type</span> { CmdkPageData }
+        <span style="color: #a78bfa">from</span>
+        <span style="color: #fca5a5">'cmdk-wc'</span
+        ><span style="color: #6b7280">;</span><br />
+        <br />
+        <span style="color: #a78bfa">const</span> pages: CmdkPageData[] = [<br />
+        &nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;id:
+        <span style="color: #fca5a5">'root'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;lists: [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id:
+        <span style="color: #fca5a5">'main'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;heading:
+        <span style="color: #fca5a5">'Main'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;items: [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id:
+        <span style="color: #fca5a5">'home'</span>, label:
+        <span style="color: #fca5a5">'Home'</span>, icon:
+        <span style="color: #fca5a5">'🏠'</span>, href:
+        <span style="color: #fca5a5">'#'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id:
+        <span style="color: #fca5a5">'settings'</span>, label:
+        <span style="color: #fca5a5">'Settings'</span>, icon:
+        <span style="color: #fca5a5">'⚙️'</span>, href:
+        <span style="color: #fca5a5">'#'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id:
+        <span style="color: #fca5a5">'projects'</span>, label:
+        <span style="color: #fca5a5">'Projects'</span>, icon:
+        <span style="color: #fca5a5">'📁'</span>, page:
+        <span style="color: #fca5a5">'projects'</span>, closeOnSelect:
+        <span style="color: #fca5a5">false</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id:
+        <span style="color: #fca5a5">'other'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;heading:
+        <span style="color: #fca5a5">'Other'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;items: [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id:
+        <span style="color: #fca5a5">'help'</span>, label:
+        <span style="color: #fca5a5">'Help'</span>, icon:
+        <span style="color: #fca5a5">'❓'</span>, href:
+        <span style="color: #fca5a5">'#'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;],<br />
+        &nbsp;&nbsp;},<br />
+        ]<span style="color: #6b7280">;</span><br />
+        <br />
+        <span style="color: #a78bfa">export default function</span> App() {<br />
+        &nbsp;&nbsp;<span style="color: #a78bfa">const</span> [open, setOpen] =
+        <span style="color: #6366f1">useState</span>(<span
+          style="color: #fca5a5"
+          >false</span
+        >)<span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;<span style="color: #a78bfa">const</span> [currentPage,
+        setCurrentPage] = <span style="color: #6366f1">useState</span>(<span
+          style="color: #fca5a5"
+          >'root'</span
+        >)<span style="color: #6b7280">;</span><br />
+        <br />
+        &nbsp;&nbsp;<span style="color: #a78bfa">const</span> handleSelect = (e:
+        <span style="color: #a78bfa">any</span>) =&gt; {<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;console.log(<span style="color: #fca5a5"
+          >'Selected:'</span
+        >, e.detail)<span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;}<span style="color: #6b7280">;</span><br />
+        <br />
+        &nbsp;&nbsp;<span style="color: #a78bfa">return</span> (<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color: #60a5fa">div</span
+        >&gt;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color: #60a5fa"
+          >button</span
+        >
+        onClick={() =&gt; setOpen(!open)}&gt;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{open ?
+        <span style="color: #fca5a5">'Close Palette'</span> :
+        <span style="color: #fca5a5">'Open Palette'</span>}<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color: #60a5fa"
+          >button</span
+        >&gt;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color: #60a5fa"
+          >cmdk-palette</span
+        ><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;open={open}<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pages={pages}<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currentPage={currentPage}<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onCmdkSelect={handleSelect}<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onCmdkPage={(e:
+        <span style="color: #a78bfa">any</span>) =&gt;
+        setCurrentPage(e.detail.page)}<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&gt;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color: #60a5fa">div</span
+        >&gt;<br />
+        &nbsp;&nbsp;)<span style="color: #6b7280">;</span>
+        }
+      </div>
+
+      <div id="tab-vue" class="code-block">
+        <span style="color: #60a5fa">&lt;template&gt;</span><br />
+        &nbsp;&nbsp;&lt;<span style="color: #60a5fa">div</span>&gt;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color: #60a5fa">button</span>
+        @click=<span style="color: #fca5a5">"togglePalette"</span>&gt;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ open ?
+        <span style="color: #fca5a5">'Close Palette'</span> :
+        <span style="color: #fca5a5">'Open Palette'</span> }}<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span style="color: #60a5fa">button</span
+        >&gt;<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span style="color: #60a5fa"
+          >cmdk-palette</span
+        ><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:open=<span style="color: #fca5a5"
+          >"open"</span
+        ><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:pages=<span style="color: #fca5a5"
+          >"pages"</span
+        ><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:currentPage=<span
+          style="color: #fca5a5"
+          >"currentPage"</span
+        ><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@cmdkSelect=<span
+          style="color: #fca5a5"
+          >"handleSelect"</span
+        ><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@cmdkPage=<span
+          style="color: #fca5a5"
+          >"handlePageChange"</span
+        ><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@open=<span style="color: #fca5a5"
+          >"open = true"</span
+        ><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@close=<span style="color: #fca5a5"
+          >"open = false"</span
+        ><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;/&gt;<br />
+        &nbsp;&nbsp;&lt;/<span style="color: #60a5fa">div</span>&gt;<br />
+        <span style="color: #60a5fa">&lt;/template&gt;</span><br />
+        <br />
+        <span style="color: #60a5fa">&lt;script setup lang=</span
+        ><span style="color: #fca5a5">"ts"</span
+        ><span style="color: #60a5fa">&gt;</span><br />
+        <span style="color: #a78bfa">import</span> { ref }
+        <span style="color: #a78bfa">from</span>
+        <span style="color: #fca5a5">'vue'</span
+        ><span style="color: #6b7280">;</span><br />
+        <span style="color: #a78bfa">import</span>
+        <span style="color: #a78bfa">type</span> { CmdkPageData }
+        <span style="color: #a78bfa">from</span>
+        <span style="color: #fca5a5">'cmdk-wc'</span
+        ><span style="color: #6b7280">;</span><br />
+        <br />
+        <span style="color: #a78bfa">const</span> open =
+        <span style="color: #6366f1">ref</span>(<span style="color: #fca5a5"
+          >false</span
+        >)<span style="color: #6b7280">;</span><br />
+        <span style="color: #a78bfa">const</span> currentPage =
+        <span style="color: #6366f1">ref</span>(<span style="color: #fca5a5"
+          >'root'</span
+        >)<span style="color: #6b7280">;</span><br />
+        <br />
+        <span style="color: #a78bfa">const</span> pages: CmdkPageData[] = [<br />
+        &nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;id:
+        <span style="color: #fca5a5">'root'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;lists: [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id:
+        <span style="color: #fca5a5">'main'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;heading:
+        <span style="color: #fca5a5">'Main'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;items: [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id:
+        <span style="color: #fca5a5">'home'</span>, label:
+        <span style="color: #fca5a5">'Home'</span>, icon:
+        <span style="color: #fca5a5">'🏠'</span>, href:
+        <span style="color: #fca5a5">'#'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id:
+        <span style="color: #fca5a5">'settings'</span>, label:
+        <span style="color: #fca5a5">'Settings'</span>, icon:
+        <span style="color: #fca5a5">'⚙️'</span>, href:
+        <span style="color: #fca5a5">'#'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id:
+        <span style="color: #fca5a5">'other'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;heading:
+        <span style="color: #fca5a5">'Other'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;items: [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id:
+        <span style="color: #fca5a5">'help'</span>, label:
+        <span style="color: #fca5a5">'Help'</span>, icon:
+        <span style="color: #fca5a5">'❓'</span>, href:
+        <span style="color: #fca5a5">'#'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;],<br />
+        &nbsp;&nbsp;},<br />
+        ]<span style="color: #6b7280">;</span><br />
+        <br />
+        <span style="color: #a78bfa">const</span> togglePalette = () =&gt; {
+        open.value = !open.value<span style="color: #6b7280">; };</span><br />
+        <br />
+        <span style="color: #a78bfa">const</span> handleSelect = (event:
+        CustomEvent) =&gt; {<br />
+        &nbsp;&nbsp;<span style="color: #a78bfa">const</span> { id, label } =
+        event.detail<span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;console.log(`Selected: ${label} (${id})`)<span
+          style="color: #6b7280"
+          >;</span
+        ><br />
+        }<span style="color: #6b7280">;</span><br />
+        <br />
+        <span style="color: #a78bfa">const</span> handlePageChange = (event:
+        CustomEvent) =&gt; {<br />
+        &nbsp;&nbsp;currentPage.value = event.detail.page<span
+          style="color: #6b7280"
+          >;</span
+        ><br />
+        &nbsp;&nbsp;console.log(`Navigated to: ${event.detail.page}`)<span
+          style="color: #6b7280"
+          >;</span
+        ><br />
+        }<span style="color: #6b7280">;</span><br />
+        <span style="color: #60a5fa">&lt;/script&gt;</span>
+      </div>
+      <div id="tab-angular" class="code-block">
+        <span style="color: #a78bfa">import</span> { Component } <span style="color: #a78bfa">from</span> <span style="color: #fca5a5">'@angular/core'</span><span style="color: #6b7280">;</span><br />
+        <span style="color: #a78bfa">import</span> { CommonModule } <span style="color: #a78bfa">from</span> <span style="color: #fca5a5">'@angular/common'</span><span style="color: #6b7280">;</span><br />
+        <span style="color: #a78bfa">import</span> <span style="color: #a78bfa">type</span> { CmdkPageData } <span style="color: #a78bfa">from</span> <span style="color: #fca5a5">'cmdk-wc'</span><span style="color: #6b7280">;</span><br />
+        <br />
+        @<span style="color: #6366f1">Component</span>({<br />
+        &nbsp;&nbsp;selector: <span style="color: #fca5a5">'app-root'</span>,<br />
+        &nbsp;&nbsp;standalone: <span style="color: #fca5a5">true</span>,<br />
+        &nbsp;&nbsp;imports: [CommonModule],<br />
+        &nbsp;&nbsp;template: <span style="color: #fca5a5">`&lt;div&gt;&lt;button (click)="togglePalette()"&gt;{{ open ? 'Close' : 'Open' }} Palette&lt;/button&gt;&lt;cmdk-palette [attr.open]="open" [attr.pages]="pages | json" [attr.currentPage]="currentPage" (cmdkSelect)="handleSelect($event)" (cmdkPage)="handlePageChange($event)"&gt;&lt;/cmdk-palette&gt;&lt;/div&gt;`</span>,<br />
+        })<br />
+        <br />
+        <span style="color: #a78bfa">export class</span> AppComponent {<br />
+        &nbsp;&nbsp;open = <span style="color: #fca5a5">false</span><span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;currentPage = <span style="color: #fca5a5">'root'</span><span style="color: #6b7280">;</span><br />
+        <br />
+        &nbsp;&nbsp;pages: CmdkPageData[] = [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id: <span style="color: #fca5a5">'root'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lists: [{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id: <span style="color: #fca5a5">'main'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;heading: <span style="color: #fca5a5">'Main'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;items: [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id: <span style="color: #fca5a5">'home'</span>, label: <span style="color: #fca5a5">'Home'</span>, icon: <span style="color: #fca5a5">'🏠'</span>, href: <span style="color: #fca5a5">'#'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id: <span style="color: #fca5a5">'settings'</span>, label: <span style="color: #fca5a5">'Settings'</span>, icon: <span style="color: #fca5a5">'⚙️'</span>, href: <span style="color: #fca5a5">'#'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id: <span style="color: #fca5a5">'other'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;heading: <span style="color: #fca5a5">'Other'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;items: [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id: <span style="color: #fca5a5">'help'</span>, label: <span style="color: #fca5a5">'Help'</span>, icon: <span style="color: #fca5a5">'❓'</span>, href: <span style="color: #fca5a5">'#'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;],<br />
+        &nbsp;&nbsp;}]<span style="color: #6b7280">;</span><br />
+        <br />
+        &nbsp;&nbsp;togglePalette() { this.open = !this.open<span style="color: #6b7280">; }</span><br />
+        <br />
+        &nbsp;&nbsp;handleSelect(event: CustomEvent) {<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #a78bfa">const</span> { id, label } = event.detail<span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;&nbsp;&nbsp;console.log(`Selected: ${label} (${id})`)<span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;}<br />
+        &nbsp;&nbsp;handlePageChange(event: CustomEvent) {<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;this.currentPage = event.detail.page<span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;}<br />
+        }
+      </div>
+
+      <div id="tab-svelte" class="code-block">
+        <span style="color: #60a5fa">&lt;script</span> <span style="color: #a78bfa">lang</span>=<span style="color: #fca5a5">"ts"</span><span style="color: #60a5fa">&gt;</span><br />
+        <span style="color: #a78bfa">import</span> <span style="color: #a78bfa">type</span> { CmdkPageData } <span style="color: #a78bfa">from</span> <span style="color: #fca5a5">'cmdk-wc'</span><span style="color: #6b7280">;</span><br />
+        <br />
+        <span style="color: #a78bfa">let</span> open = <span style="color: #fca5a5">false</span><span style="color: #6b7280">;</span><br />
+        <span style="color: #a78bfa">let</span> currentPage = <span style="color: #fca5a5">'root'</span><span style="color: #6b7280">;</span><br />
+        <br />
+        <span style="color: #a78bfa">const</span> pages<span style="color: #6b7280">:</span> CmdkPageData[] = [<br />
+        &nbsp;&nbsp;{ id: <span style="color: #fca5a5">'root'</span>, lists: [{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;id: <span style="color: #fca5a5">'main'</span>, heading: <span style="color: #fca5a5">'Main'</span>,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;items: [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id: <span style="color: #fca5a5">'home'</span>, label: <span style="color: #fca5a5">'Home'</span>, icon: <span style="color: #fca5a5">'🏠'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ id: <span style="color: #fca5a5">'settings'</span>, label: <span style="color: #fca5a5">'Settings'</span>, icon: <span style="color: #fca5a5">'⚙️'</span> },<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;]<br />
+        &nbsp;&nbsp;}]<br />
+        &nbsp;&nbsp;}]<span style="color: #6b7280">;</span><br />
+        <br />
+        <span style="color: #a78bfa">function</span> togglePalette() { open = !open<span style="color: #6b7280">;</span> }<br />
+        <br />
+        <span style="color: #a78bfa">function</span> handleSelect(e: CustomEvent) {<br />
+        &nbsp;&nbsp;console.log(<span style="color: #fca5a5">'Selected:'</span>, e.detail)<span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;open = <span style="color: #fca5a5">false</span><span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;}<br />
+        <br />
+        <span style="color: #a78bfa">function</span> handlePageChange(e: CustomEvent) {<br />
+        &nbsp;&nbsp;currentPage = e.detail<span style="color: #6b7280">;</span><br />
+        &nbsp;&nbsp;}<br />
+        <span style="color: #60a5fa">&lt;/script&gt;</span><br />
+        <br />
+        <span style="color: #60a5fa">&lt;button</span> on:click={togglePalette}<span style="color: #60a5fa">&gt;</span><br />
+        &nbsp;&nbsp;Open Palette<br />
+        <span style="color: #60a5fa">&lt;/button&gt;</span><br />
+        <br />
+        <span style="color: #60a5fa">&lt;cmdk-palette</span> {open} {pages} {currentPage}<br />
+        &nbsp;&nbsp;on:cmdk-select={handleSelect} on:cmdk-page={handlePageChange}<br />
+        <span style="color: #60a5fa">/&gt;</span>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
       <p>
-        A Lit-based command palette component with pages, search filtering, and keyboard
-        navigation. Press <kbd>Ctrl+K</kbd> (or <kbd>Cmd+K</kbd> on Mac) to open.
+        Built with ❤️ by
+        <a href="https://github.com/Ahmed-Elgendy25">Ahmed</a> ·
+        <a href="https://github.com/Ahmed-Elgendy25/cmdk-webcomponent"
+          >GitHub</a
+        >
+        · <a href="https://www.npmjs.com/package/cmdk-wc">npm</a> · MIT License
       </p>
 
-      <div class="demo-section">
-        <h2>Demo</h2>
-        <p>
-          Click the button below or press the keyboard shortcut to open the command palette.
-        </p>
-        <button id="open-btn" type="button">Open Command Palette</button>
-        <div class="keyboard-hint">Ctrl+K (or Cmd+K)</div>
-      </div>
-
-      <div class="demo-section">
-        <h2>Event Log</h2>
-        <p>Events dispatched by the palette will appear below:</p>
-        <div id="events-log"></div>
-      </div>
-    </div>
-
+    <!-- The actual palette -->
     <cmdk-palette id="palette"></cmdk-palette>
 
-    <script type="module">
-      const palette = document.getElementById('palette');
-      const openBtn = document.getElementById('open-btn');
-      const eventLog = document.getElementById('events-log');
+    <script>
+      // Define functions immediately so onclick handlers can call them
+      let palette;
 
-      // Sample pages data according to the specification
-      const pages = [
-        {
-          id: 'root',
-          lists: [
+      window.openPalette = () => {
+        try {
+          if (!palette) {
+            palette = document.getElementById('palette');
+          }
+          if (palette) {
+            palette.setAttribute('open', '');
+            palette.open = true;
+            console.log('Palette opened successfully');
+          }
+        } catch (err) {
+          console.error('Error opening palette:', err);
+        }
+      };
+
+      window.showTab = (name, btn) => {
+        try {
+          const allBlocks = document.querySelectorAll('.code-block');
+          allBlocks.forEach((block) => {
+            block.classList.remove('active');
+          });
+
+          const allTabs = document.querySelectorAll('.install-tabs .tab');
+          allTabs.forEach((tab) => {
+            tab.classList.remove('active');
+          });
+
+          const selectedBlock = document.getElementById('tab-' + name);
+          if (selectedBlock) {
+            selectedBlock.classList.add('active');
+            console.log('Showing tab:', name);
+          }
+
+          if (btn) {
+            btn.classList.add('active');
+          }
+        } catch (err) {
+          console.error('Error switching tab:', err);
+        }
+      };
+    </script>
+
+    <script type="module">
+      // Load from jsDelivr which has better CORS support
+      import 'https://cdn.jsdelivr.net/npm/cmdk-wc/+esm';
+
+      // Wait a bit for the component to register, then initialize
+      setTimeout(() => {
+        const paletteElement = document.getElementById('palette');
+
+        if (!paletteElement) {
+          console.error('Palette element not found!');
+          return;
+        }
+
+        console.log('Palette element found, initializing...');
+
+        // Initialize palette with pages
+        try {
+          paletteElement.pages = [
             {
-              id: 'home',
-              heading: 'Home',
-              items: [
+              id: 'root',
+              lists: [
                 {
                   id: 'home',
-                  label: 'Home',
-                  icon: '🏠',
-                  href: '#',
+                  heading: 'Home',
+                  items: [
+                    { id: 'home', label: 'Home', icon: '🏠' },
+                    { id: 'settings', label: 'Settings', icon: '⚙️' },
+                    {
+                      id: 'projects',
+                      label: 'Projects',
+                      icon: '📁',
+                      page: 'projects',
+                      closeOnSelect: false,
+                    },
+                  ],
                 },
                 {
-                  id: 'settings',
-                  label: 'Settings',
-                  icon: '⚙️',
-                  href: '#',
-                },
-                {
-                  id: 'projects',
-                  label: 'Projects',
-                  icon: '📁',
-                  page: 'projects',
-                  closeOnSelect: false,
+                  id: 'other',
+                  heading: 'Other',
+                  items: [
+                    {
+                      id: 'dev',
+                      label: 'Developer settings',
+                      icon: '👨‍💻',
+                    },
+                    {
+                      id: 'privacy',
+                      label: 'Privacy policy',
+                      icon: '🛡️',
+                    },
+                    {
+                      id: 'logout',
+                      label: 'Log out',
+                      icon: '🚪',
+                      onClick: () => alert('Logging out…'),
+                    },
+                  ],
                 },
               ],
             },
             {
-              id: 'other',
-              heading: 'Other',
-              items: [
+              id: 'projects',
+              lists: [
                 {
-                  id: 'dev',
-                  label: 'Developer settings',
-                  icon: '👨‍💻',
-                  href: '#',
-                },
-                {
-                  id: 'privacy',
-                  label: 'Privacy policy',
-                  icon: '🛡️',
-                  href: '#',
-                },
-                {
-                  id: 'logout',
-                  label: 'Log out',
-                  icon: '🚪',
-                  onClick: () => {
-                    alert('Logging out…');
-                  },
+                  id: 'projects-list',
+                  heading: 'Projects',
+                  items: [
+                    {
+                      id: 'hobby',
+                      label: 'Hobby project',
+                      icon: '🎮',
+                      onClick: () => alert('Hobby project!'),
+                    },
+                    {
+                      id: 'work',
+                      label: 'Work project',
+                      icon: '💼',
+                      onClick: () => alert('Work project!'),
+                    },
+                  ],
                 },
               ],
             },
-          ],
-        },
-        {
-          id: 'projects',
-          lists: [
-            {
-              id: 'projects-list',
-              heading: 'Projects',
-              items: [
-                {
-                  id: 'hobby',
-                  label: 'Hobby project',
-                  icon: '🎮',
-                  onClick: () => {
-                    alert('Opening hobby project…');
-                  },
-                },
-                {
-                  id: 'work',
-                  label: 'Work project',
-                  icon: '💼',
-                  onClick: () => {
-                    alert('Opening work project…');
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      ];
+          ];
 
-      // Set up the palette
-      palette.pages = pages;
-
-      // Button to toggle palette (focus is handled automatically by component)
-      openBtn.addEventListener('click', () => {
-        palette.open = !palette.open;
-      });
-
-      // Event logging
-      function logEvent(type, detail) {
-        const now = new Date().toLocaleTimeString('en-US', {
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        });
-        const line = document.createElement('div');
-        line.className = 'event-line';
-        line.innerHTML = `<span class="event-time">${now}</span><span class="event-type">${type}</span> ${JSON.stringify(
-          detail
-        )}`;
-        eventLog.insertBefore(line, eventLog.firstChild);
-
-        // Keep only last 10 events
-        while (eventLog.children.length > 10) {
-          eventLog.removeChild(eventLog.lastChild);
+          console.log('Palette initialized successfully');
+        } catch (err) {
+          console.error('Error initializing palette:', err);
         }
-      }
-
-      palette.addEventListener('cmdk-select', (e) => {
-        logEvent('cmdk-select', e.detail);
-      });
-
-      palette.addEventListener('cmdk-page', (e) => {
-        logEvent('cmdk-page', e.detail);
-      });
-
-      palette.addEventListener('cmdk-search', (e) => {
-        logEvent('cmdk-search', e.detail);
-      });
-
-      console.log('✨ cmdk palette loaded!');
-      console.log('📖 Try:');
-      console.log('  - Press Ctrl+K to open the palette');
-      console.log('  - Type to search');
-      console.log('  - Arrow keys to navigate');
-      console.log('  - Enter to select');
-      console.log('  - Escape to close or go back');
+      }, 300);
     </script>
-  </body>
-</html>
 
-    <script type="module">
-      import('./src/index.ts');
-
-      const palette = document.getElementById('palette');
-
-      // Log item selection
-      palette.addEventListener('cmdk-select', (e) => {
-        console.log('✓ Selected:', e.detail);
-      });
-
-      // Log navigation (drill-down)
-      palette.addEventListener('cmdk-navigate', (e) => {
-        console.log(
-          `→ Navigated to "${e.detail.label}" (depth: ${e.detail.depth})`,
-        );
-      });
-
-      // Log navigation back
-      palette.addEventListener('cmdk-navigate-back', (e) => {
-        console.log('← Navigated back');
-      });
-
-      // Log search queries
-      palette.addEventListener('cmdk-input', (e) => {
-        console.log('🔍 Searching:', e.detail.query);
+    <script>
+      // Keyboard shortcut - wait for functions to be available
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+          e.preventDefault();
+          if (window.openPalette) {
+            window.openPalette();
+          }
+        }
       });
     </script>
   </body>
